@@ -1,2 +1,31 @@
 # Pluma
 CMS modular es un sistema de gestión de contenidos para publicar posts. Tiene un sitio público de lectura y un panel de administración protegido por login. Está pensado para aprender y practicar cómo se conectan frontend, backend, base de datos y seguridad en una sola aplicación.
+
+# CMS modular
+
+Node 20.6+ · Express · SQLite · JWT en cookie HttpOnly · bcrypt · sanitize-html
+
+## Puesta en marcha
+1. `npm install`
+2. `cp .env.example .env` y completar `JWT_SECRET` (≥ 32 caracteres) y `ADMIN_PASSWORD`
+3. `npm run dev` → sitio en http://localhost:3000 y panel en http://localhost:3000/admin
+
+## Estructura
+- `src/routes/`       URLs → controlador (aquí se cambian las rutas)
+- `src/middlewares/`  autenticación, roles, validación, errores
+- `src/controllers/`  traducen petición HTTP ↔ servicio
+- `src/services/`     lógica de negocio y acceso a la BD
+- `src/db/`           esquema SQLite y seed del admin
+- `public/`           lector público y panel admin (autoguardado)
+
+## API
+ Método  Ruta  Acceso 
+ POST | /api/auth/login · /api/auth/logout | público |
+ GET | /api/auth/me | sesión |
+ GET | /api/posts?page=&limit= | público (solo publicados) |
+ GET | /api/posts/:slug | público |
+ GET | /api/admin/posts?status=&page= | admin / editor (el editor ve solo los suyos) |
+ GET | /api/admin/posts/:id | admin / editor (dueño) |
+ POST | /api/admin/posts | admin / editor |
+| PATCH | /api/admin/posts/:id · /:id/status | admin / editor (dueño) |
+| DELETE | /api/admin/posts/:id | solo admin |
