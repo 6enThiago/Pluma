@@ -19,20 +19,18 @@ Node 20.6+ · Express · SQLite · JWT en cookie HttpOnly · bcrypt · sanitize-
 - `public/`           lector público y panel admin (autoguardado)
 
 ## API
- Método  Ruta  Acceso 
- POST | /api/auth/login · /api/auth/logout | público 
- GET | /api/auth/me | sesión 
- 
- GET | /api/posts?page=&limit= | público (solo publicados)
- 
- GET | /api/posts/:slug | público 
- 
- GET | /api/admin/posts?status=&page= | admin / editor (el editor ve solo los suyos)
- 
- GET | /api/admin/posts/:id | admin / editor (dueño) 
- 
- POST | /api/admin/posts | admin / editor 
- 
- PATCH | /api/admin/posts/:id · /:id/status | admin / editor (dueño) 
- 
- DELETE | /api/admin/posts/:id | solo admin 
+| Método | Ruta | Acceso |
+|---|---|---|
+| POST | /api/auth/register | público (registro abierto, siempre rol editor, exige acceptTerms) |
+| POST | /api/auth/login · /api/auth/logout | público |
+| GET | /api/auth/me | sesión |
+| GET | /api/posts?page=&limit= | público (solo publicados) |
+| GET | /api/posts/:slug | público |
+| GET | /api/admin/posts?status=&page= | admin / editor (el editor ve solo los suyos) |
+| GET | /api/admin/posts/:id | admin / editor (dueño) |
+| POST | /api/admin/posts | admin / editor |
+| PATCH | /api/admin/posts/:id · /:id/status | admin / editor (dueño) |
+| DELETE | /api/admin/posts/:id | solo admin |
+
+## Licencia
+AGPL-3.0-only. Ver `LICENSE`. La licencia cubre el código; el contenido que publican los usuarios sigue siendo de sus autores (ver `public/terms.html`).
