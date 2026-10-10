@@ -13,6 +13,24 @@ export function validateLogin(req, res, next) {
   errors.length ? next(fail(errors)) : next();
 }
 
+const RESERVED_USERNAMES = ['admin', 'administrador', 'root', 'soporte', 'moderador', 'sistema', 'staff', 'cms', 'api'];
+
+export function validateRegister(req, res, next) {
+  const { email, username, password, acceptTerms } = req.body ?? {};
+  const errors = [];
+  if (typeof email !== 'string' || email.length > 254 || !/^\S+@\S+\.\S+$/.test(email)) errors.push('email inválido');
+  if (typeof username !== 'string' || !/^[A-Za-z0-9_]{3,30}$/.test(username)) {
+    errors.push('username: 3 a 30 caracteres (letras, números y guion bajo)');
+  } else if (RESERVED_USERNAMES.includes(username.toLowerCase())) {
+    errors.push('username: ese nombre está reservado');
+  }
+  if (typeof password !== 'string' || password.length < 8 || password.length > 72) {
+    errors.push('password: entre 8 y 72 caracteres');
+  }
+  if (acceptTerms !== true) errors.push('Debes leer el aviso y aceptar los términos para crear la cuenta');
+  errors.length ? next(fail(errors)) : next();
+}
+
 function checkPostFields(body, { requireTitle }) {
   const { title, content, status } = body ?? {};
   const errors = [];
@@ -47,6 +65,7 @@ export function validateStatusBody(req, res, next) {
     ? next()
     : next(fail([`status: debe ser ${STATUSES.join(' o ')}`]));
 }
+
 /** Para router.param('id', validateId): convierte y valida el :id de la ruta. */
 export function validateId(req, res, next, value) {
   const id = Number(value);
@@ -54,9 +73,12 @@ export function validateId(req, res, next, value) {
   req.params.id = id;
   next();
 }
+
 export function validateSlug(req, res, next, value) {
   return /^[a-z0-9-]{1,100}$/.test(value) ? next() : next(new HttpError(400, 'Slug inválido'));
 }
+
+/** Query params ?page=2&limit=10&status=published → req.query normalizado. */
 export function validateListQuery(req, res, next) {
   const page = req.query.page === undefined ? 1 : Number(req.query.page);
   const limit = req.query.limit === undefined ? 10 : Number(req.query.limit);
